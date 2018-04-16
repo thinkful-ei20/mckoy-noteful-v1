@@ -12,7 +12,9 @@ const PORT = 8080;
 app.use(express.static('public'));
 
 app.get('/api/notes', (req, res) => {
-  res.json(data);
+  const {searchTerm} = req.query;
+  console.log(searchTerm);
+  res.json(data.filter(entry => entry.title.includes(searchTerm)));
 });
 
 app.get('/api/notes/:id', (req, res) => {

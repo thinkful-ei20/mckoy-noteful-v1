@@ -13,8 +13,9 @@ app.use(express.static('public'));
 
 app.get('/api/notes', (req, res) => {
   const {searchTerm} = req.query;
-  console.log(searchTerm);
-  res.json(data.filter(entry => entry.title.includes(searchTerm)));
+  res.json(data.filter(entry => entry.title.includes(searchTerm) 
+  || entry.content.includes(searchTerm) 
+  || String(entry.id).includes(searchTerm)));
 });
 
 app.get('/api/notes/:id', (req, res) => {

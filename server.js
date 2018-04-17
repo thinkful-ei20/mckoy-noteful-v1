@@ -25,7 +25,7 @@ app.get('/api/notes', (req, res, next) => {
   });
 });
 
-app.get('/api/notes/:id', (req, res, next) => {
+app.get('/api/notes/:id', (err, req, res, next) => {
   const id = req.params.id;
   notes.find(id,(err,item)=>{
     if(err){

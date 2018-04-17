@@ -12,6 +12,8 @@ const app = express();
 
 app.use(express.static('public'));
 app.use(requestLogger);
+app.use(express.json());
+
 
 app.get('/api/notes', (req, res, next) => {
   const {searchTerm} = req.query;
@@ -31,7 +33,6 @@ app.get('/api/notes/:id', (req, res, next) => {
     }
     res.json(item);
   });
-  //res.send(data.find(entry => entry.id === Number(query.id)));
 });
 
 app.put('/api/notes/:id',(req,res,next)=>{  

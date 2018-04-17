@@ -19,7 +19,7 @@ const noteful = (function () {
   function generateNotesList(list, currentNote) {
     const listItems = list.map(item => `
     <li data-id="${item.id}" class="js-note-element ${currentNote.id === item.id ? 'active' : ''}">
-      <a href="#" class="name js-note-show-link">${item.title}</a>
+      <a href="#" class="name js-note-show-link">${(currentNote.title && currentNote.id === item.id) ? currentNote.title : item.title}</a>
       <button class="removeBtn js-note-delete-button">X</button>
     </li>`);
     return listItems.join('');
@@ -68,9 +68,16 @@ const noteful = (function () {
   function handleNoteFormSubmit() {
     $('.js-note-edit-form').on('submit', function (event) {
       event.preventDefault();
-
-      console.log('Submit Note, coming soon...');
-
+      const editForm = $(event.currentTarget);
+      const noteObj = {
+        title: editForm.find('.js-note-title-entry').val(),
+        content: editForm.find('.js-note-content-entry').val()
+      };
+      noteObj.id = store.currentNote.id;
+      api.update(noteObj.id, noteObj, updateResponse => {
+        store.currentNote = updateResponse;
+        render();
+      });
     });
   }
 
@@ -95,7 +102,6 @@ const noteful = (function () {
   function bindEventListeners() {
     handleNoteItemClick();
     handleNoteSearchSubmit();
-
     handleNoteFormSubmit();
     handleNoteStartNewSubmit();
     handleNoteDeleteClick();

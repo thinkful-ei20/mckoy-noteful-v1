@@ -12,8 +12,14 @@ const PORT = 8080;
 app.use(express.static('public'));
 
 app.get('/api/notes', (req, res) => {
+  res.send(data);
+});
+
+app.get('/api/notes', (req, res) => {
   const {searchTerm} = req.query;
-  res.json(data.filter(entry => entry.title.includes(searchTerm) 
+  res.send(
+    (searchTerm===undefined) ? data : 
+      data.filter(entry => entry.title.includes(searchTerm) 
   || entry.content.includes(searchTerm) 
   || String(entry.id).includes(searchTerm)));
 });

@@ -1,6 +1,8 @@
 'use strict';
 
 const data = require('./db/notes');
+const simDB = require('./db/simDB');
+const notes = simDB.initialize(data);
 const {PORT} = require('./config');
 const {requestLogger} = require('./middleware/logger');
 
@@ -13,17 +15,14 @@ const app = express();
 app.use(express.static('public'));
 app.use(requestLogger);
 
-app.get('/api/notes', (req, res) => {
-  res.send(data);
-});
-
-app.get('/api/notes', (req, res) => {
+app.get('/api/notes', (req, res, next) => {
   const {searchTerm} = req.query;
-  res.send(
-    (searchTerm===undefined) ? data : 
-      data.filter(entry => entry.title.includes(searchTerm) 
-  || entry.content.includes(searchTerm) 
-  || String(entry.id).includes(searchTerm)));
+  notes.filter(searchTerm, (err, list) => {
+    if (err) {
+      return next(err);
+    }
+    res.json(list);
+  });
 });
 
 app.get('/api/notes/:id', (req, res) => {
